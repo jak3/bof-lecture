@@ -12,7 +12,7 @@ class: middle
 # Agenda
 
 <pre>
-Goals
+BoF Goals
 ├─ Code Arrangement
 │  ├─ Inject
 │  └─ already there
@@ -30,7 +30,9 @@ Goals
 .blockquote[
 <i>
 1. Arrange for suitable code to be available in the program's address
-    space.<br><br>
+    space.
+
+
 2. Get the program to jump to that code, with suitable
     parameters loaded into registers & memory.
 </i>
@@ -45,7 +47,7 @@ Decade](https://crypto.stanford.edu/cs155/papers/cowan-vulnerability.pdf)]
 # Step 1
 ]
 .right-column[
-## <em><i>a. Inject it</i></em>
+## <em><b><i>a. Inject it</i></b></em>
 ## b. It is already there
 ]
 
@@ -82,6 +84,8 @@ For this reason it is always called *Shellcode*.
 
 **Note:** if the executable is root *set-uid*, then you got a root
 shell! Does you remember SUID bit?!
+
+**Question:** Do you know why `/bin/sh` instead `/bin/bash`?
 ]
 
 ---
@@ -105,6 +109,7 @@ shell! Does you remember SUID bit?!
 ## In the buffer
 ]
 .right-column[
+<div style="padding-top: 100px"/>
 ```c
 #include <stdio.h>
 #include <string.h>
@@ -128,6 +133,7 @@ int main(int argc, char **argv) {
 ## In another buffer
 ]
 .right-column[
+<div style="padding-top: 100px"/>
 ```c
 #include<string.h>
 
@@ -155,6 +161,7 @@ int main(int argc, char *argv[])
 ## In the environment
 ]
 .right-column[
+<div style="padding-top: 100px"/>
 ```bash
 # Export the environment variable
 # [NOP sledge + Shellcode]
@@ -169,8 +176,11 @@ export SH=`python -c 'print "\x90"*40000+   \
 ./vuln-prog `python -c 'print "\xd4\x94\x04 \
 	\x08FLOW\xd6\x94\x04\x08
 	%57076x%4$n%57599x%6$n"'` 1> /dev/null
-
 ```
+
+]
+.footnote[
+_**Question:** Do you know what kind of attack is it?_
 ]
 ---
 
@@ -179,7 +189,18 @@ export SH=`python -c 'print "\x90"*40000+   \
 ]
 .right-column[
 ## a. Inject it
-## <em><i>b. It is already there</i></em>
+## <em><b><i>b. It is already there</i></b></em>
+]
+
+---
+
+
+.left-column[
+# Step 1.b
+]
+.right-column[
+<div style="padding-top: 150px"/>
+**_Sometimes attackers can't inject shellcodes._**
 ]
 
 ---
@@ -207,7 +228,7 @@ export SH=`python -c 'print "\x90"*40000+   \
 .left-column[
 # Step 1.b
 ##### Why?
-##### How?
+##### Ploys?
 ]
 .right-column[
 <div style="padding-top: 200px"/>
@@ -224,7 +245,7 @@ export SH=`python -c 'print "\x90"*40000+   \
 .left-column[
 # Step 1.b
 ##### Why?
-##### How?
+##### Ploys?
 ]
 .right-column[
 <div style="padding-top: 200px"/>
@@ -242,14 +263,16 @@ export SH=`python -c 'print "\x90"*40000+   \
 .left-column[
 # Step 1.b
 ##### Why?
-##### How?
+##### Ploys?
 ]
 .right-column[
 <div style="padding-top: 200px"/>
 **Pointers and gadgets<sup>1</sup> are already there..**
-**Memory is not a panacea of zeros..**<br><br>
+**Memory is not a panacea of zeros..**
+
+
 Common techniques that leverage this idea are:
-<div style="padding-top: 25px"/>
+
 <table border="0" cellspacing="5" cellpadding="5">
   <tr>
     <th>Technique</th>
@@ -259,7 +282,6 @@ Common techniques that leverage this idea are:
   <tr><td>Return to GOT </td><td right>NX bit, StackGuard</td></tr>
   <tr><td>ROP (&co)     </td><td right>NX bit, StackGuard, ASLR</td></tr>
 </table>
-
 ]
 
 .footnote[
@@ -275,7 +297,7 @@ Common techniques that leverage this idea are:
 ]
 <div style="padding-top: 150px"/>
 .right-column[
-In order to jump to the suitable code, attackers could corrupt the
+In order to jump to the suitable code, attackers must corrupt the
 normal program flow by overwriting or mangling:
 
 - Activation records
@@ -288,7 +310,7 @@ normal program flow by overwriting or mangling:
 .left-column[
 # Step 2
 ##### Jump to that code
-<br>
+
 **Activation Record**
 ]
 <div style="padding-top: 220px"/>
@@ -302,7 +324,7 @@ function's stack frame.
 .left-column[
 # Step 2
 ##### Jump to that code
-<br>
+
 **Activation Record**
 ]
 .right-column[
@@ -332,7 +354,7 @@ Dynamic link (AKA Control link) points to the activation record of the caller.
 .left-column[
 # Step 2
 ##### Jump to that code
-<br>
+
 **Activation Record**
 ]
 .right-column[
@@ -359,7 +381,7 @@ int main(int argc, char *argv[])
 .left-column[
 # Step 2
 ##### Jump to that code
-<br>
+
 **Function pointers**
 ]
 <div style="padding-top: 200px"/>
@@ -375,7 +397,7 @@ subterfuge attacks were developed to evade stack protection mechanisms.
 .left-column[
 # Step 2
 ##### Jump to that code
-<br>
+
 **Function pointers**
 ]
 .right-column[
@@ -383,7 +405,7 @@ subterfuge attacks were developed to evade stack protection mechanisms.
 void foo(void *arg, size_t len)
 {
   char buf[256];
-  void (*f)() = 0xdeadbeef;
+  void (*f)() = 0xabad1dea;
   memcpy(buf, arg, len);
   f();
   return;
@@ -400,17 +422,39 @@ void foo(void *arg, size_t len)
 .left-column[
 # Step 2
 ##### Jump to that code
-<br>
+
 **longjmp**
 ]
 .right-column[
 <div style="padding-top: 200px"/>
 We prefer to not spoil the [IO netgarage level16](https://io.netgarage.org/).
-One of our favorite challenge!<br>
+One of our favorite challenge!
+
+
+**Setjmp** and **longjmp** are the common **try**/**catch** statements for C
+language.
+
+
+_setjmp_ save the current state (environ) of the process, in order to jump back
+to it.
+
+
+_longjmp_ does the stack unwinding in order to restore the previous saved state
+by _setjmp_.
 ]
+---
+
+# Resources
+
+- [Smashing The Stack For Fun And Profit](http://phrack.org/issues/49/14.html)
+- [IO](Smashing The Stack For Fun And Profit)
+- [Ret2libc](http://www.cis.syr.edu/~wedu/seed/Labs/Vulnerability/Return_to_libc/Return_to_libc.pdf)
+- [Intro to ROP](http://codearcana.com/posts/2013/05/28/introduction-to-return-oriented-programming-rop.html)
+- [Journey into exploitation](http://www.myne-us.com/2010/08/from-0x90-to-0x4c454554-journey-into.html)
+- [Useful links](http://pastebin.com/aqGvjhgB)
+- [bjhua security course](http://staff.ustc.edu.cn/~bjhua/courses/security/2014/lectures.html)
+
 ---
 class: center, middle
 
 <img src="imgs/bcat.gif" alt="A black Cat that polish his nails"/>
-
----
