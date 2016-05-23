@@ -457,7 +457,7 @@ One of our favorite challenge! Check it out.
 - StackGuard = **Defeated**
 - NX bit = **Defeated**
 - ASLR = **Defeated**
-- Point Guard = ???
+- PointGuard = ???
 - **It is _NOT_ only a C/C++ problem!** <br><br><u>_Food for thoughts_</u>:<br>Interpreter, compiler, JIT, VM in which language are written?
 ]
 
