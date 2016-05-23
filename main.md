@@ -15,7 +15,7 @@ class: middle
 BoF Goals
 ├─ Code Arrangement
 │  ├─ Inject
-│  └─ already there
+│  └─ Already there
 └─ Jump to it
    ├─ What will be corrupted?
    ├─ Activation Record
@@ -59,7 +59,7 @@ Decade](https://crypto.stanford.edu/cs155/papers/cowan-vulnerability.pdf)]
 ]
 .right-column[
 <div style="padding-top: 150px"/>
-- must be binary opcode (attackers can't compile)
+- must be binary opcodes (attackers can't compile)
 - must be [position-independent](http://eli.thegreenplace.net/2011/11/03/position-independent-code-pic-in-shared-libraries/)
 (*an additional level of indirection to all global data and function
 references in the code. Code can be easily mapped into different memory addresses without
@@ -98,10 +98,10 @@ shell! Does you remember SUID bit?!
 ]
 .right-column[
 <div style="padding-top: 250px"/>
-- In the same buffer (that overflow)
+- In the same buffer (overflowed)
 - In another buffer
 - In an environment variable (easier to be located, very high address)
-- Everywhere in memory, attackers are really creative
+- Everywhere in memory, **attackers are** really **creative**
 ]
 
 ---
@@ -237,8 +237,9 @@ _**Question:** Do you know what kind of attack is it?_
 
 .footnote[
 1. The term **gadget** is improperly used. Typically in *ROP* a gadget is a
-   small instruction sequences ending with a `ret` instruction `c3`. Here we use
-   it to denote whatever `bytecodes sequence -> instruction` useful.
+   small instruction sequences ending with a `ret` (`c3`). Here we use
+   it to denote whatever _bytecodes sequence_ (instruction) could be useful
+   (like `jmp [addr_SHELLCODE]`).
 ]
 ---
 
@@ -255,8 +256,9 @@ _**Question:** Do you know what kind of attack is it?_
 
 .footnote[
 1. The term **gadget** is improperly used. Typically in *ROP* a gadget is a
-   small instruction sequences ending with a `ret` instruction `c3`. Here we use
-   it to denote whatever `bytecodes sequence -> instruction` useful.
+   small instruction sequences ending with a `ret` (`c3`). Here we use
+   it to denote whatever _bytecodes sequence_ (instruction) could be useful
+   (like `jmp [addr_SHELLCODE]`).
 ]
 ---
 
@@ -286,8 +288,9 @@ Common techniques that leverage this idea are:
 
 .footnote[
 1. The term **gadget** is improperly used. Typically in *ROP* a gadget is a
-   small instruction sequences ending with a `ret` instruction `c3`. Here we use
-   it to denote whatever `bytecodes sequence -> instruction` useful.
+   small instruction sequences ending with a `ret` (`c3`). Here we use
+   it to denote whatever _bytecodes sequence_ (instruction) could be useful
+   (like `jmp [addr_SHELLCODE]`).
 ]
 ---
 
@@ -387,7 +390,7 @@ int main(int argc, char *argv[])
 <div style="padding-top: 200px"/>
 .right-column[
 The deliberate modification of the value of a pointer is referred to as
-pointer subterfuge. As these types of attacks modify directly the control flow
+_pointer subterfuge_. As these types of attacks modify directly the control flow
 of the program, they are also known as control flow attacks. Originally, pointer
 subterfuge attacks were developed to evade stack protection mechanisms.
 ]
@@ -427,10 +430,6 @@ void foo(void *arg, size_t len)
 ]
 .right-column[
 <div style="padding-top: 200px"/>
-We prefer to not spoil the [IO netgarage level16](https://io.netgarage.org/).
-One of our favorite challenge!
-
-
 **Setjmp** and **longjmp** are the common **try**/**catch** statements for C
 language.
 
@@ -441,7 +440,27 @@ to it.
 
 _longjmp_ does the stack unwinding in order to restore the previous saved state
 by _setjmp_.
+
+
+We prefer to not spoil the [IO netgarage level16](https://io.netgarage.org/).
+One of our favorite challenge! Check it out.
 ]
+---
+
+.left-column[
+# Recap
+<img src="imgs/bcat.gif" alt="A black Cat that polish his nails"/>
+]
+.right-column[
+<div style="padding-top: 150px"/>
+- Secure coding = _**Utopia**_
+- StackGuard = **Defeated**
+- NX bit = **Defeated**
+- ASLR = **Defeated**
+- Point Guard = ???
+- **It is _NOT_ only a C/C++ problem!** <br><br><u>_Food for thoughts_</u>:<br>Interpreter, compiler, JIT, VM in which language are written?
+]
+
 ---
 
 # Resources
@@ -453,8 +472,3 @@ by _setjmp_.
 - [Journey into exploitation](http://www.myne-us.com/2010/08/from-0x90-to-0x4c454554-journey-into.html)
 - [Useful links](http://pastebin.com/aqGvjhgB)
 - [bjhua security course](http://staff.ustc.edu.cn/~bjhua/courses/security/2014/lectures.html)
-
----
-class: center, middle
-
-<img src="imgs/bcat.gif" alt="A black Cat that polish his nails"/>
