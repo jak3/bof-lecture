@@ -29,11 +29,11 @@ BoF Goals
 
 .blockquote[
 <i>
-1. Arrange for suitable code to be available in the program's address
-    space.
+**1**. Arrange for suitable code to be available in the program's address
+  space.
 
 
-2. Get the program to jump to that code, with suitable
+**2**. Get the program to jump to that code, with suitable
     parameters loaded into registers & memory.
 </i>
 ]
@@ -472,3 +472,9 @@ One of our favorite challenge! Check it out.
 - [Journey into exploitation](http://www.myne-us.com/2010/08/from-0x90-to-0x4c454554-journey-into.html)
 - [Useful links](http://pastebin.com/aqGvjhgB)
 - [bjhua security course](http://staff.ustc.edu.cn/~bjhua/courses/security/2014/lectures.html)
+
+## About
+
+- **Author**: Giacomo Mantani
+- **Email**: name dot surname at studio.unibo.it
+- **IRC**: j4ke (on Freenode)
